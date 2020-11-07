@@ -17,4 +17,4 @@ If you need to update your test, based on an updated base.side file, run the fol
 ~~~
 
 # Requirements
-You need to install "*jq*" to parse json 
+You need to install the awesome ["jq"](https://stedolan.github.io/jq/) to parse json.
