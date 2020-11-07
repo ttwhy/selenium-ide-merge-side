@@ -5,8 +5,8 @@ Basic though for this helper, as side files does not allow includes of files / l
 
 ## Usage
 Write Tests based on a Base.side file as starting point.
-Functions that should be shared should contain a "~" char / tests does not contain that char.
-Use the run command on ever reusable "~" fragment.
+Functions that should be shared should contain a "\~" char / tests does not contain that char.
+Use the run command on ever reusable "\~" fragment.
 
 If you need to update your test, based on an updated base.side file, run the following command:
 
