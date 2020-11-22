@@ -1,5 +1,3 @@
-TMPDIR=$(mktemp -d)
-
 # checking dependencies
 if ! command -v jq &> /dev/null
 then
@@ -7,37 +5,49 @@ then
 	exit
 fi
 
+TMPDIR=$(mktemp -d)
 GENTARGET=$TMPDIR/result.side
 TARGET=$GENTARGET
+
+
+function usage(){
+			echo "usage:"
+		       	echo "     ./merge-side.sh -b base.side -t test.side [-o output.side]"	
+}
+
 while getopts "hb:t:o:" opt; do
 	case ${opt} in
 		b )
 			BASE=$OPTARG
-			echo $BASE
 			;;
 		t )
 			TESTSRC=$OPTARG
-			echo $TESTSRC
 			;;
 		o )	
 			TARGET=$OPTARG
-			echo $TARGET
 			;;
 
-		h ) 
-			echo "usage:"
-		       	echo "./merge-side.sh -b base.side -t test.side [-o output.side]"	
-			exit 0
-			;;
 		\? )
-			echo "invalid option -$OPTARG" 1>&2
-			exit 1
+			#echo "unknown option $@($OPTIND)" 1>&2
+			X=$OPTIND
+			echo "unknown option $X" 1>&2
+			echo "Fu: -$OPTARG" >&2
+			;;
+		: )
+			echo "Missing required parameter: $OPTARG"
+			exit -1
+			;;
+		h ) 
+			usage
+			exit -1
 			;;
 	esac
 done
 
 if [ -z ${BASE} ] || [ -z ${TESTSRC} ]; then
 	echo "missing required parameters"
+	usage
+	exit -1 
 fi
 
 
