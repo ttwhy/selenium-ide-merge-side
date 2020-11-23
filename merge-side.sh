@@ -28,10 +28,7 @@ while getopts "hb:t:o:" opt; do
 			;;
 
 		\? )
-			#echo "unknown option $@($OPTIND)" 1>&2
-			X=$OPTIND
-			echo "unknown option $X" 1>&2
-			echo "Fu: -$OPTARG" >&2
+			# invalid option
 			;;
 		: )
 			echo "Missing required parameter: $OPTARG"
