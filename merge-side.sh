@@ -65,6 +65,9 @@ jq -s add $TMPDIR/functionality.json $TMPDIR/suites.json > $TMPDIR/coredata.json
 jq -s add $TMPDIR/headers.json $TMPDIR/coredata.json > $TARGET 
 
 if [ "${GENTARGET}" == "${TARGET}" ]; then
-	cat $TARGET
+	cat $TARGET 
 fi
-exit $?
+
+# cleanup and use returncode from last command execution
+trap "rc=$?; rm -r $TMPDIR; exit $rc" EXIT
+exit
