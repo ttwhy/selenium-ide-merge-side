@@ -1,9 +1,7 @@
+#!/bin/bash
+
 # checking dependencies
-if ! command -v jq &> /dev/null
-then
-	echo "jq is required"
-	exit
-fi
+command -v jq > /dev/null  || (echo "jq is required" && exit)
 
 TMPDIR=$(mktemp -d)
 GENTARGET=$TMPDIR/result.side
@@ -55,12 +53,16 @@ cat $BASE | jq '. | {tests: .tests | map(. | select(.name | contains("~")) | {id
 cat $TESTSRC | jq '. | {tests: .tests | map(. | select(.name | contains("~") | not) | {id: .id, name: .name, commands: .commands} ) }' > $TMPDIR/tests.json
 
 # extract suite
-cat $TESTSRC | jq '. | {id: .id, version: .version, name: .name, url: .url, suites: .suites}' > $TMPDIR/suites.json
+cat $TESTSRC | jq '. | {suites: .suites}' > $TMPDIR/suites.json
+
+cat $TESTSRC | jq '. | {id: .id, version: .version, name: .name, url: .url}' > $TMPDIR/headers.json
 
 # merge stuff togther again
 jq -s '.[0].tests + .[1].tests | {tests: .}' $TMPDIR/tests.json $TMPDIR/functions.json > $TMPDIR/functionality.json
 
-jq -s add $TMPDIR/suites.json $TMPDIR/functionality.json > $TARGET 
+jq -s add $TMPDIR/functionality.json $TMPDIR/suites.json > $TMPDIR/coredata.json 
+
+jq -s add $TMPDIR/headers.json $TMPDIR/coredata.json > $TARGET 
 
 if [ "${GENTARGET}" == "${TARGET}" ]; then
 	cat $TARGET
